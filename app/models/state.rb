@@ -2,7 +2,7 @@ class State
   attr_accessor :name
   
   def self.all
-    [
+    @states ||= [
       new("Alabama"),
       new("Alaska"),
       new("Arizona"),
@@ -55,8 +55,20 @@ class State
       new("Wyoming")
     ]
   end
+
+  def self.remove(id)
+    @states ||= []
+    @states.delete_at(id)
+    App.notification_center.post 'StateDataChanged'
+    @states
+  end
   
   def initialize(title)
     self.name = title
   end
+
+  def id
+    self.class.all.index(self)
+  end
+
 end
